@@ -1,5 +1,6 @@
 package com.example.FacultetAndStudents.controller;
 
+import com.example.FacultetAndStudents.model.Faculty;
 import com.example.FacultetAndStudents.model.Student;
 import com.example.FacultetAndStudents.service.impl.StudentServiceImpl;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +48,16 @@ public class StudentController {
     }
 
     @GetMapping
-    public Collection<Student> getAllStudents() {
+    public Collection<Student> getAllStudents(@PathVariable(required = false) Integer minAge,
+                                              @PathVariable(required = false) Integer maxAge) {
+        if (minAge != null && maxAge != null) {
+            return studentService.findStudentsByAgeBetween(minAge, maxAge);
+        }
         return studentService.getAllStudents();
+    }
+
+    @GetMapping("/faculty/{id}")
+    public ResponseEntity<Faculty> getFaculty(Integer id) {
+        return studentService.getFacultyByStudent(id);
     }
 }

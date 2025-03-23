@@ -1,6 +1,7 @@
 package com.example.FacultetAndStudents.controller;
 
 import com.example.FacultetAndStudents.model.Faculty;
+import com.example.FacultetAndStudents.model.Student;
 import com.example.FacultetAndStudents.service.impl.FacultyServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,14 +19,22 @@ public class FacultyController {
 
     @PostMapping
     public Faculty createFaculty(@RequestBody Faculty faculty) {
-       return facultyService.createFaculty(faculty);
+        return facultyService.createFaculty(faculty);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Faculty> getFacultyInfo(@PathVariable Integer id) {
+    public ResponseEntity<Faculty> getFacultyInfo(@PathVariable(required = false) Integer id,
+                                                  @PathVariable(required = false) String facultyName,
+                                                  @PathVariable(required = false) String facultyColor) {
         Faculty faculty = facultyService.findFaculty(id);
-        if (faculty == null) {
+        if (faculty == null && facultyName == null && facultyColor == null) {
             return ResponseEntity.notFound().build();
+        }
+        if (facultyName != null) {
+            return ResponseEntity.ok(facultyService.findByName(facultyName));
+        }
+        if (facultyColor != null) {
+            return ResponseEntity.ok(facultyService.findByColor(facultyColor));
         }
         return ResponseEntity.ok(faculty);
     }
@@ -44,5 +53,10 @@ public class FacultyController {
     @GetMapping
     public Collection<Faculty> getAllFaculty() {
         return facultyService.getAllFaculty();
+    }
+
+    @GetMapping("studets/{id}")
+    public Collection<Student> getStudentsOnFaculty(@PathVariable Integer id) {
+        return facultyService.findAllStudentsInFaculty(id);
     }
 }
