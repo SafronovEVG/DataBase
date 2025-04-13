@@ -1,13 +1,13 @@
 package com.example.FacultetAndStudents.service.impl;
 
 import com.example.FacultetAndStudents.model.Faculty;
-import com.example.FacultetAndStudents.model.Student;
 import com.example.FacultetAndStudents.repository.FacultyRepository;
 import com.example.FacultetAndStudents.service.api.FacultyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -26,8 +26,8 @@ public class FacultyServiceImpl implements FacultyService {
     }
 
     @Override
-    public Collection<Student> findAllStudentsInFaculty(Integer facultyId) {
-        return facultyRepository.findById(facultyId).get().getStudents();
+    public Optional<Faculty> findAllStudentsInFaculty(Integer facultyId) {
+        return facultyRepository.findById(facultyId);
     }
 
     @Override
@@ -36,7 +36,13 @@ public class FacultyServiceImpl implements FacultyService {
     }
 
     @Override
-    public Faculty findFaculty(int id) {
+    public Faculty findFaculty(Integer id, String facultyName, String facultyColor) {
+        if (facultyName != null) {
+            return findByName(facultyName);
+        }
+        if (facultyColor != null) {
+            return findByColor(facultyColor);
+        }
         return facultyRepository.findById(id).get();
     }
 

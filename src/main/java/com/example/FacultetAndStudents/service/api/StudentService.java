@@ -21,5 +21,5 @@ public interface StudentService {
 
     void deleteStudent(int id);
 
-    Collection<Student> getAllStudents();
+    Collection<Student> getAllStudents(Integer minAge, Integer maxAge);
 }

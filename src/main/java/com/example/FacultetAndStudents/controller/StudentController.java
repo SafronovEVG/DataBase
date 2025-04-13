@@ -50,10 +50,7 @@ public class StudentController {
     @GetMapping
     public Collection<Student> getAllStudents(@PathVariable(required = false) Integer minAge,
                                               @PathVariable(required = false) Integer maxAge) {
-        if (minAge != null && maxAge != null) {
-            return studentService.findStudentsByAgeBetween(minAge, maxAge);
-        }
-        return studentService.getAllStudents();
+        return studentService.getAllStudents(minAge, maxAge);
     }
 
     @GetMapping("/faculty/{id}")

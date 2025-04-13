@@ -1,12 +1,12 @@
 package com.example.FacultetAndStudents.controller;
 
 import com.example.FacultetAndStudents.model.Faculty;
-import com.example.FacultetAndStudents.model.Student;
 import com.example.FacultetAndStudents.service.impl.FacultyServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("faculty")
@@ -22,21 +22,12 @@ public class FacultyController {
         return facultyService.createFaculty(faculty);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Faculty> getFacultyInfo(@PathVariable(required = false) Integer id,
                                                   @PathVariable(required = false) String facultyName,
                                                   @PathVariable(required = false) String facultyColor) {
-        Faculty faculty = facultyService.findFaculty(id);
-        if (faculty == null && facultyName == null && facultyColor == null) {
-            return ResponseEntity.notFound().build();
-        }
-        if (facultyName != null) {
-            return ResponseEntity.ok(facultyService.findByName(facultyName));
-        }
-        if (facultyColor != null) {
-            return ResponseEntity.ok(facultyService.findByColor(facultyColor));
-        }
-        return ResponseEntity.ok(faculty);
+
+        return ResponseEntity.ok(facultyService.findFaculty(id, facultyName, facultyColor));
     }
 
     @PutMapping
@@ -44,7 +35,7 @@ public class FacultyController {
         return facultyService.editFaculty(faculty);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Faculty> deleteFaculty(@PathVariable Integer id) {
         facultyService.deleteFaculty(id);
         return ResponseEntity.ok().build();
@@ -55,8 +46,8 @@ public class FacultyController {
         return facultyService.getAllFaculty();
     }
 
-    @GetMapping("studets/{id}")
-    public Collection<Student> getStudentsOnFaculty(@PathVariable Integer id) {
+    @GetMapping("/students/{id}")
+    public Optional<Faculty> getStudentsOnFaculty(@PathVariable Integer id) {
         return facultyService.findAllStudentsInFaculty(id);
     }
 }

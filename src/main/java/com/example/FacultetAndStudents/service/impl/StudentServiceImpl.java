@@ -23,7 +23,6 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-
     public Student createStudent(String name, Integer age) {
         Student student = new Student();
         student.setAge(age);
@@ -57,7 +56,10 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Collection<Student> getAllStudents() {
+    public Collection<Student> getAllStudents(Integer minAge, Integer maxAge) {
+        if (minAge != null && maxAge != null) {
+            return findStudentsByAgeBetween(minAge, maxAge);
+        }
         return studentRepository.findAll();
     }
 }

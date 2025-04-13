@@ -1,20 +1,20 @@
 package com.example.FacultetAndStudents.service.api;
 
 import com.example.FacultetAndStudents.model.Faculty;
-import com.example.FacultetAndStudents.model.Student;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public interface FacultyService {
     Faculty findByName(String facultyName);
 
     Faculty findByColor(String facultyColor);
 
-    Collection<Student> findAllStudentsInFaculty(Integer facultyId);
+    Optional<Faculty> findAllStudentsInFaculty(Integer facultyId);
 
     Faculty createFaculty(Faculty nameFaculty);
 
-    Faculty findFaculty(int id);
+    Faculty findFaculty(Integer id, String facultyName, String facultyColor);
 
     Faculty editFaculty(Faculty nameFaculty);
 
