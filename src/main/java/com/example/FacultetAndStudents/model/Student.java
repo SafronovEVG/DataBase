@@ -1,5 +1,6 @@
 package com.example.FacultetAndStudents.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,6 +13,7 @@ public class Student {
     private String name;
     private Integer age;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "faculty_id")
     private Faculty faculty;

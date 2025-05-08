@@ -1,13 +1,12 @@
 package com.example.FacultetAndStudents.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Collection;
 import java.util.Objects;
 @Data
+@ToString(exclude = "students")
 @Entity
 public class Faculty {
     @Id
