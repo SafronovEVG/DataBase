@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 
 @RestController
-@RequestMapping("student")
+@RequestMapping("/student")
 public class StudentController {
     private final StudentServiceImpl studentService;
 
@@ -27,7 +27,7 @@ public class StudentController {
         return studentService.createStudent(name, age);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Student> findStudent(@PathVariable Integer id) {
         Student student = studentService.findByIdStudent(id);
         if (student == null) {
@@ -41,7 +41,7 @@ public class StudentController {
         return studentService.editStudent(student);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Student> deleteStudent(@PathVariable Integer id) {
         studentService.deleteStudent(id);
         return ResponseEntity.ok().build();
