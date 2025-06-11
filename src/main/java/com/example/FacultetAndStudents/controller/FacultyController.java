@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("faculty")
+@RequestMapping("/faculty")
 public class FacultyController {
     private final FacultyServiceImpl facultyService;
 

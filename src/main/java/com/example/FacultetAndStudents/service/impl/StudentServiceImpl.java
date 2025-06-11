@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.List;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -62,4 +63,17 @@ public class StudentServiceImpl implements StudentService {
         }
         return studentRepository.findAll();
     }
+
+    public Integer getCountStudent() {
+        return studentRepository.getCountStudent();
+    }
+
+    public Double getAvgYear() {
+        return studentRepository.getAvgYear();
+    }
+
+    public List<Student> getLastStudent() {
+        return studentRepository.getLastStudent();
+    }
+
 }

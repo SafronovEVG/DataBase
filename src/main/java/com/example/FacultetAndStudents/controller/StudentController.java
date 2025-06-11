@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/student")
@@ -56,5 +57,20 @@ public class StudentController {
     @GetMapping("/faculty/{id}")
     public ResponseEntity<Faculty> getFaculty(Integer id) {
         return studentService.getFacultyByStudent(id);
+    }
+
+    @GetMapping("/count-students")
+    public Integer getCountStudent() {
+        return studentService.getCountStudent();
+    }
+
+    @GetMapping("/avg-students")
+    public Double getAvgYear() {
+        return studentService.getAvgYear();
+    }
+
+    @GetMapping("/last-student")
+    public List<Student> getLastStudent() {
+        return studentService.getLastStudent();
     }
 }
