@@ -55,7 +55,7 @@ public class StudentController {
     }
 
     @GetMapping("/faculty/{id}")
-    public ResponseEntity<Faculty> getFaculty(Integer id) {
+    public ResponseEntity<Faculty> getFaculty(@PathVariable Integer id) {
         return studentService.getFacultyByStudent(id);
     }
 
@@ -69,8 +69,8 @@ public class StudentController {
         return studentService.getAvgYear();
     }
 
-    @GetMapping("/last-student")
-    public List<Student> getLastStudent() {
-        return studentService.getLastStudent();
+    @GetMapping("/last-student/{number}")
+    public List<Student> getLastStudent(@PathVariable Integer number) {
+        return studentService.getLastStudent(number);
     }
 }

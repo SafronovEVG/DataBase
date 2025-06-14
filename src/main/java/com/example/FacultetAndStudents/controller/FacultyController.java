@@ -22,10 +22,10 @@ public class FacultyController {
         return facultyService.createFaculty(faculty);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Faculty> getFacultyInfo(@PathVariable(required = false) Integer id,
-                                                  @PathVariable(required = false) String facultyName,
-                                                  @PathVariable(required = false) String facultyColor) {
+    @GetMapping("/get")
+    public ResponseEntity<Faculty> getFacultyInfo(@RequestParam(required = false) Integer id,
+                                                  @RequestParam(required = false) String facultyName,
+                                                  @RequestParam(required = false) String facultyColor) {
 
         return ResponseEntity.ok(facultyService.findFaculty(id, facultyName, facultyColor));
     }

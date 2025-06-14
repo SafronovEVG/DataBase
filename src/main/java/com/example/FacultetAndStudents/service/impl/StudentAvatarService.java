@@ -3,9 +3,11 @@ package com.example.FacultetAndStudents.service.impl;
 import com.example.FacultetAndStudents.model.Student;
 import com.example.FacultetAndStudents.model.StudentAvatar;
 import com.example.FacultetAndStudents.repository.StudentAvatarRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -83,5 +85,21 @@ public class StudentAvatarService {
     public List<StudentAvatar> getAll(Integer pageNumber, Integer pageSize) {
         PageRequest pageRequest = PageRequest.of(pageNumber-1, pageSize);
         return studentRepository.findAll(pageRequest).getContent();
+    }
+
+    public void downloadAvatar(Integer id, HttpServletResponse response) throws IOException {
+        StudentAvatar studentAvatar = findStudentAvatar(id);
+
+        Path path = Path.of(studentAvatar.getFilePath());
+
+        try (
+                InputStream is = Files.newInputStream(path);
+                OutputStream os = response.getOutputStream();
+        ) {
+            response.setStatus(200);
+            response.setContentType(studentAvatar.getMediaType());
+            response.setContentLength((int) studentAvatar.getFileSize());
+            is.transferTo(os);
+        }
     }
 }

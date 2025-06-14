@@ -72,8 +72,8 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.getAvgYear();
     }
 
-    public List<Student> getLastStudent() {
-        return studentRepository.getLastStudent();
+    public List<Student> getLastStudent(Integer number) {
+        return studentRepository.getLastStudent(number);
     }
 
 }

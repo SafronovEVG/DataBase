@@ -11,10 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 
 @RestController
@@ -48,22 +44,10 @@ public class AvatarController {
 
     @GetMapping(value = "/{id}/cover")
     public void downloadAvatar(@PathVariable Integer id, HttpServletResponse response) throws IOException {
-        StudentAvatar studentAvatar = studentAvatarService.findStudentAvatar(id);
-
-        Path path = Path.of(studentAvatar.getFilePath());
-
-        try (
-                InputStream is = Files.newInputStream(path);
-                OutputStream os = response.getOutputStream();
-        ) {
-            response.setStatus(200);
-            response.setContentType(studentAvatar.getMediaType());
-            response.setContentLength((int) studentAvatar.getFileSize());
-            is.transferTo(os);
-        }
+        studentAvatarService.downloadAvatar(id, response);
     }
 
-    @GetMapping()
+    @GetMapping
     public List<StudentAvatar> getAllAvatars(@RequestParam("page") Integer pageNumber, @RequestParam("size") Integer pageSize) {
         return studentAvatarService.getAll(pageNumber, pageSize);
     }

@@ -1,5 +1,6 @@
 package com.example.FacultetAndStudents.service.impl;
 
+import com.example.FacultetAndStudents.exception.FacultyNotFoundException;
 import com.example.FacultetAndStudents.model.Faculty;
 import com.example.FacultetAndStudents.repository.FacultyRepository;
 import com.example.FacultetAndStudents.service.api.FacultyService;
@@ -43,7 +44,10 @@ public class FacultyServiceImpl implements FacultyService {
         if (facultyColor != null) {
             return findByColor(facultyColor);
         }
-        return facultyRepository.findById(id).get();
+        if (id != null) {
+            return facultyRepository.findById(id).get();
+        }
+        throw new FacultyNotFoundException();
     }
 
     @Override
