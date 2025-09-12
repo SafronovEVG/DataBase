@@ -2,6 +2,7 @@ package com.example.FacultetAndStudents.controller;
 
 import com.example.FacultetAndStudents.model.Faculty;
 import com.example.FacultetAndStudents.service.impl.FacultyServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,12 +11,9 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/faculty")
+@RequiredArgsConstructor
 public class FacultyController {
     private final FacultyServiceImpl facultyService;
-
-    public FacultyController(FacultyServiceImpl facultyService) {
-        this.facultyService = facultyService;
-    }
 
     @PostMapping
     public Faculty createFaculty(@RequestBody Faculty faculty) {
