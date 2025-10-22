@@ -5,9 +5,9 @@ import com.example.FacultetAndStudents.model.StudentAvatar;
 import com.example.FacultetAndStudents.repository.StudentAvatarRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,17 +23,13 @@ import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class StudentAvatarService {
 
     @Value("${books.cover.dir.path}")
     private String avatarDir;
     private final StudentServiceImpl studentService;
     private final StudentAvatarRepository studentRepository;
-
-    public StudentAvatarService(StudentServiceImpl studentService, StudentAvatarRepository studentRepository) {
-        this.studentService = studentService;
-        this.studentRepository = studentRepository;
-    }
 
     private String getExtension(String fileName) {
         return fileName.substring(fileName.lastIndexOf(".") + 1);
@@ -44,6 +40,14 @@ public class StudentAvatarService {
         Path filePath = Path.of(avatarDir, studentId + "." + getExtension(file.getOriginalFilename()));
         Files.createDirectories(filePath.getParent());
         Files.deleteIfExists(filePath);
+        readFile(file, filePath);
+        StudentAvatar studentAvatar = findStudentAvatar(studentId);
+        updateAvatar(file, studentAvatar, studentEntity, filePath);
+
+        studentRepository.save(studentAvatar);
+    }
+
+    private static void readFile(MultipartFile file, Path filePath) throws IOException {
         try (
                 InputStream is = file.getInputStream();
                 OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
@@ -52,14 +56,15 @@ public class StudentAvatarService {
         ) {
             bis.transferTo(bos);
         }
-        StudentAvatar studentAvatar = findStudentAvatar(studentId);
+    }
+
+    private void updateAvatar(MultipartFile file, StudentAvatar studentAvatar,
+                              Student studentEntity, Path filePath) throws IOException {
         studentAvatar.setStudent(studentEntity);
         studentAvatar.setFilePath(filePath.toString());
         studentAvatar.setFileSize(file.getSize());
         studentAvatar.setMediaType(file.getContentType());
         studentAvatar.setAvatar(generateImagePreview(filePath));
-
-        studentRepository.save(studentAvatar);
     }
 
     public StudentAvatar findStudentAvatar(Integer studentAvatarId) {

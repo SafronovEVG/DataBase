@@ -4,6 +4,7 @@ import com.example.FacultetAndStudents.model.Faculty;
 import com.example.FacultetAndStudents.model.Student;
 import com.example.FacultetAndStudents.repository.StudentRepository;
 import com.example.FacultetAndStudents.service.api.StudentService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -11,12 +12,9 @@ import java.util.Collection;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
-
-    public StudentServiceImpl(StudentRepository studentRepository) {
-        this.studentRepository = studentRepository;
-    }
 
     @Override
     public Collection<Student> findStudentsByAgeBetween(Integer min, Integer max) {

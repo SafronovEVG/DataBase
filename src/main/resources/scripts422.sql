@@ -1,0 +1,16 @@
+CREATE TABLE auto(
+id INTEGER PRIMARY KEY,
+brand VARCHAR(20),
+model VARCHAR(20),
+price INTEGER
+);
+
+
+
+CREATE TABLE users(
+id INTEGER PRIMARY KEY,
+name VARCHAR(30),
+age INTEGER,
+driver_license BOOLEAN DEFAULT TRUE
+auto_id INTEGER REFERENCES auto(id)
+);
