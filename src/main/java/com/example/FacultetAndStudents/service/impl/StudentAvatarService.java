@@ -5,6 +5,7 @@ import com.example.FacultetAndStudents.model.StudentAvatar;
 import com.example.FacultetAndStudents.repository.StudentAvatarRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +21,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
-
+@Slf4j
 @Service
 @Transactional
 public class StudentAvatarService {
@@ -40,6 +41,7 @@ public class StudentAvatarService {
     }
 
     public void uploadStudentAvatar(Integer studentId, MultipartFile file) throws IOException {
+        log.info("Upload student avatar");
         Student studentEntity = studentService.findByIdStudent(studentId);
         Path filePath = Path.of(avatarDir, studentId + "." + getExtension(file.getOriginalFilename()));
         Files.createDirectories(filePath.getParent());
@@ -63,6 +65,7 @@ public class StudentAvatarService {
     }
 
     public StudentAvatar findStudentAvatar(Integer studentAvatarId) {
+        log.info("Find student avatar");
         return studentRepository.findStudentById(studentAvatarId).orElse(new StudentAvatar());
     }
 
@@ -83,11 +86,13 @@ public class StudentAvatarService {
     }
 
     public List<StudentAvatar> getAll(Integer pageNumber, Integer pageSize) {
+        log.info("get all avatar");
         PageRequest pageRequest = PageRequest.of(pageNumber-1, pageSize);
         return studentRepository.findAll(pageRequest).getContent();
     }
 
     public void downloadAvatar(Integer id, HttpServletResponse response) throws IOException {
+        log.info("download avatar");
         StudentAvatar studentAvatar = findStudentAvatar(id);
 
         Path path = Path.of(studentAvatar.getFilePath());
