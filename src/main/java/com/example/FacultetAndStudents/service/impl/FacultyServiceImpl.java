@@ -7,9 +7,12 @@ import com.example.FacultetAndStudents.service.api.FacultyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -74,5 +77,18 @@ public class FacultyServiceImpl implements FacultyService {
     public Collection<Faculty> getAllFaculty() {
         log.debug("All faculty find");
         return facultyRepository.findAll();
+    }
+
+    public String getLongFacultyName() {
+        return facultyRepository.findAll()
+                .stream().parallel()
+                .map(Faculty::getName).max(Comparator.comparing(String::length)).toString();
+    }
+
+    public Integer getInt() {
+        return  Stream.iterate(1, a -> a +1)
+                .parallel()
+                .limit(1_000_000)
+                .reduce(0, Integer::sum);
     }
 }

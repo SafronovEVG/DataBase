@@ -73,4 +73,15 @@ public class StudentController {
     public List<Student> getLastStudent(@PathVariable Integer number) {
         return studentService.getLastStudent(number);
     }
+
+    @GetMapping("/find-all/{letter}")
+    public ResponseEntity<List<Student>> getAllStudentsLetter(@PathVariable Character letter) {
+        return ResponseEntity.ok(studentService.getAllStudentsLetter(letter));
+    }
+
+    @GetMapping("/avg-eyar")
+    ResponseEntity<Integer> integerResponseEntity() {
+        return ResponseEntity.ok(studentService.getAvgYearForStream());
+    }
 }
+

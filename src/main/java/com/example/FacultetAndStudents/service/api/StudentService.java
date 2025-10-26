@@ -5,6 +5,7 @@ import com.example.FacultetAndStudents.model.Student;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface StudentService {
     Collection<Student> findStudentsByAgeBetween(Integer min, Integer max);
@@ -22,4 +23,10 @@ public interface StudentService {
     void deleteStudent(int id);
 
     Collection<Student> getAllStudents(Integer minAge, Integer maxAge);
+
+    Collection<Student> findAll = List.of();
+
+    List<Student> getAllStudentsLetter(Character character);
+
+    Integer getAvgYearForStream();
 }

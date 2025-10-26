@@ -1,5 +1,6 @@
 package com.example.FacultetAndStudents.service.impl;
 
+import com.example.FacultetAndStudents.exception.StudentBadRequestException;
 import com.example.FacultetAndStudents.model.Faculty;
 import com.example.FacultetAndStudents.model.Student;
 import com.example.FacultetAndStudents.repository.StudentRepository;
@@ -9,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -88,4 +91,24 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.getLastStudent(number);
     }
 
+    @Override
+    public List<Student> getAllStudentsLetter(Character character) {
+        if (character.describeConstable().isEmpty() || Character.isDigit(character)) {
+            throw new StudentBadRequestException();
+        }
+        return studentRepository.findAll()
+                .stream().parallel()
+                .filter(s -> s.getName().substring(0, 1).equalsIgnoreCase(String.valueOf(character)))
+                .sorted(Comparator.comparing(Student::getName))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Integer getAvgYearForStream() {
+        return (int) studentRepository.findAll()
+                .stream().parallel()
+                .mapToInt(Student::getAge)
+                .summaryStatistics()
+                .getAverage();
+    }
 }

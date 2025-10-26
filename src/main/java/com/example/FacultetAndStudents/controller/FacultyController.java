@@ -50,4 +50,14 @@ public class FacultyController {
     public Optional<Faculty> getStudentsOnFaculty(@PathVariable Integer id) {
         return facultyService.findAllStudentsInFaculty(id);
     }
+
+    @GetMapping("/long-name-faculty")
+    public ResponseEntity<String> getLongNameFaculty() {
+        return ResponseEntity.ok(facultyService.getLongFacultyName());
+    }
+
+    @GetMapping("/get-int")
+    ResponseEntity<Integer> getInt() {
+        return ResponseEntity.ok(facultyService.getInt());
+    }
 }
