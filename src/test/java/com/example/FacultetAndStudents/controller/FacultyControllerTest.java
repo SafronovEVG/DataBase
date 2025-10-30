@@ -1,19 +1,25 @@
 package com.example.FacultetAndStudents.controller;
 
 import com.example.FacultetAndStudents.model.Faculty;
+import com.example.FacultetAndStudents.model.Student;
+import com.example.FacultetAndStudents.repository.FacultyRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
 
+import java.lang.reflect.Type;
+import java.util.*;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.http.HttpMethod.GET;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class FacultyControllerTest {
@@ -40,6 +46,43 @@ public class FacultyControllerTest {
     void createAndDeleteFaculty() {
         Faculty facultyRequest = createFaculty();
         deleteFaculty(createFaculty().getId());
+    }
+
+    @Test
+    void shouldGetAllFaculty() {
+        String url = "http://localhost:" + port + "/faculty";
+
+        assertThat(this.testRestTemplate.getForObject(url, Collection.class)).isNotNull();
+    }
+
+    @Test
+    void shouldGetStudentOnFacultyTest() {
+        String url = "http://localhost:" + port + "/faculty/students/1";
+
+        assertThat(this.testRestTemplate.getForObject(url, Faculty.class)).isNotNull();
+        ResponseEntity<Optional<Faculty>> response = testRestTemplate.exchange(url, HttpMethod.GET, null,
+                new ParameterizedTypeReference<Optional<Faculty>>() {
+                });
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        assertEquals(facultyController.getStudentsOnFaculty(1).toString(), response.getBody().toString());
+    }
+
+    @Test
+    void shouldGetLongNameFaculty() {
+        String url = "http://localhost:" + port + "/faculty/long-name-faculty";
+        ResponseEntity<String> response = testRestTemplate.exchange(url, GET, null, String.class);
+
+        assertThat(this.testRestTemplate.getForEntity(url, String.class)).isNotNull();
+        assertEquals(response.getStatusCode(), HttpStatus.OK);
+        assertEquals(facultyController.getLongNameFaculty().getBody(), response.getBody());
+    }
+
+    @Test
+    void shouldGetIntTest() {
+        String url = "http://localhost:" + port + "/faculty/get-int";
+
+        ResponseEntity<Integer> response = testRestTemplate.exchange(url, GET, null, Integer.class);
+        assertEquals(response.getStatusCode(),HttpStatus.OK);
     }
 
     private Faculty createFaculty() {

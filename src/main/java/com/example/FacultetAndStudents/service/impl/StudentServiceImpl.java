@@ -93,11 +93,14 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<Student> getAllStudentsLetter(Character character) {
-        if (character.describeConstable().isEmpty() || Character.isDigit(character)) {
+        log.info("Get all student letter ");
+        if (character == null || character.describeConstable().isEmpty() || Character.isDigit(character)) {
+            log.info("Get all students throws");
             throw new StudentBadRequestException();
         }
         return studentRepository.findAll()
                 .stream().parallel()
+                .filter(student -> student.getName() != null)
                 .filter(s -> s.getName().substring(0, 1).equalsIgnoreCase(String.valueOf(character)))
                 .sorted(Comparator.comparing(Student::getName))
                 .collect(Collectors.toList());
@@ -105,8 +108,10 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Integer getAvgYearForStream() {
+        log.info("get avg year all students");
         return (int) studentRepository.findAll()
                 .stream().parallel()
+                .filter(student -> student.getAge() != null)
                 .mapToInt(Student::getAge)
                 .summaryStatistics()
                 .getAverage();

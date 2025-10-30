@@ -79,7 +79,7 @@ public class StudentController {
         return ResponseEntity.ok(studentService.getAllStudentsLetter(letter));
     }
 
-    @GetMapping("/avg-eyar")
+    @GetMapping("/avg-year")
     ResponseEntity<Integer> integerResponseEntity() {
         return ResponseEntity.ok(studentService.getAvgYearForStream());
     }

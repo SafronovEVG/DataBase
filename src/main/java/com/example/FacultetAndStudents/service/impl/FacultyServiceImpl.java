@@ -7,8 +7,6 @@ import com.example.FacultetAndStudents.service.api.FacultyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Optional;
@@ -80,12 +78,14 @@ public class FacultyServiceImpl implements FacultyService {
     }
 
     public String getLongFacultyName() {
+        log.info("Get long name faculty");
         return facultyRepository.findAll()
                 .stream().parallel()
-                .map(Faculty::getName).max(Comparator.comparing(String::length)).toString();
+                .map(Faculty::getName).max(Comparator.comparing(String::length)).orElse(toString());
     }
 
     public Integer getInt() {
+        log.info("Get int");
         return  Stream.iterate(1, a -> a +1)
                 .parallel()
                 .limit(1_000_000)
