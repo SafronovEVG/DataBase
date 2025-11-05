@@ -7,8 +7,9 @@ import com.example.FacultetAndStudents.service.api.FacultyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import java.util.Collection;
+
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -67,16 +68,17 @@ public class FacultyServiceImpl implements FacultyService {
 
     @Override
     public void deleteFaculty(int id) {
-        log.debug("Faculty deleted="+ id);
+        log.debug("Faculty deleted=" + id);
         facultyRepository.deleteById(id);
     }
 
     @Override
-    public Collection<Faculty> getAllFaculty() {
+    public List<Faculty> getAllFaculty() {
         log.debug("All faculty find");
         return facultyRepository.findAll();
     }
 
+    @Override
     public String getLongFacultyName() {
         log.info("Get long name faculty");
         return facultyRepository.findAll()
@@ -84,9 +86,10 @@ public class FacultyServiceImpl implements FacultyService {
                 .map(Faculty::getName).max(Comparator.comparing(String::length)).orElse(toString());
     }
 
+    @Override
     public Integer getInt() {
         log.info("Get int");
-        return  Stream.iterate(1, a -> a +1)
+        return Stream.iterate(1, a -> a + 1)
                 .parallel()
                 .limit(1_000_000)
                 .reduce(0, Integer::sum);

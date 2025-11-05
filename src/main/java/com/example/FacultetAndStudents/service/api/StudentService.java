@@ -26,6 +26,12 @@ public interface StudentService {
 
     Collection<Student> findAll = List.of();
 
+    Integer getCountStudent();
+
+    Double getAvgYear();
+
+    List<Student> getLastStudent(Integer number);
+
     List<Student> getAllStudentsLetter(Character character);
 
     Integer getAvgYearForStream();

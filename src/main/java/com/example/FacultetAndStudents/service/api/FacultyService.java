@@ -3,6 +3,7 @@ package com.example.FacultetAndStudents.service.api;
 import com.example.FacultetAndStudents.model.Faculty;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 public interface FacultyService {
@@ -20,5 +21,9 @@ public interface FacultyService {
 
     void deleteFaculty(int id);
 
-    Collection<Faculty> getAllFaculty();
+    List<Faculty> getAllFaculty();
+
+    String getLongFacultyName();
+
+    Integer getInt();
 }

@@ -1,34 +1,20 @@
 package com.example.FacultetAndStudents.controller;
 
+import com.example.FacultetAndStudents.exception.StudentBadRequestException;
+import com.example.FacultetAndStudents.it.AbstractIntegrationTest;
 import com.example.FacultetAndStudents.model.Student;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 
-import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.HttpMethod.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class StudentControllerTest {
-
-    @LocalServerPort
-    private int port;
-
-    @Autowired
-    private StudentController studentController;
-
-    @Autowired
-    private TestRestTemplate restTemplate;
+public class StudentControllerTest extends AbstractIntegrationTest {
 
     @Test
     void contextLoadStudentController() throws Exception {
@@ -42,11 +28,17 @@ public class StudentControllerTest {
 
     @Test
     void testCreateStudentTest() {
-        Student testStudent = new Student();
-        testStudent.setName("UserName");
-        testStudent.setAge(10);
-        Assertions.assertThat(this.restTemplate.postForObject("http://localhost:"
-                + port + "/student", testStudent, String.class)).isNotNull();
+        Student student = getStudentTest1();
+        HttpEntity<Student> reqEntity = new HttpEntity<>(student);
+
+        ResponseEntity<Student> response = testRestTemplate.exchange(LOCALHOST + port + "/student",
+                HttpMethod.POST, reqEntity, Student.class);
+
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        assertNotNull(response.getBody());
+        Student studentSave = studentRepository.findAll().get(0);
+        assertEquals(student.getAge(), studentSave.getAge());
+        assertEquals(student.getName(), studentSave.getName());
     }
 
     @Test
@@ -57,43 +49,100 @@ public class StudentControllerTest {
 
     @Test
     void getCountStudentTest() {
-        Assertions.assertThat(this.restTemplate.getForObject("http://localhost:"
-                + port + "/count-students", String.class)).isNotNull();
+        Student student = getStudentTest1();
+        Student student2 = getStudentTest2();
+        Student student3 = getStudentTest3();
+        studentRepository.save(student);
+        studentRepository.save(student2);
+        studentRepository.save(student3);
+
+        ResponseEntity<Integer> response = testRestTemplate.exchange(LOCALHOST + port + "/student/count-students",
+                GET, null, Integer.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        Integer countStudent = studentRepository.getCountStudent();
+        assertEquals(countStudent, response.getBody());
     }
 
     @Test
     void getAvgYearStudentTest() {
-        assertThat(this.restTemplate.getForObject("http://localhost:" +
-                port + "/student/avg-students", Double.class)).isNotNull();
-        assertEquals(studentController.getAvgYear(), restTemplate.getForObject(("http://localhost:" +
-                port + "/student/avg-students"), Double.class));
+        Student student = getStudentTest1();
+        Student student2 = getStudentTest2();
+        Student student3 = getStudentTest3();
+        studentRepository.save(student);
+        studentRepository.save(student2);
+        studentRepository.save(student3);
+        double expectedYear = studentRepository.getAvgYear();
+
+        ResponseEntity<Double> response = testRestTemplate.exchange(LOCALHOST + port + "/student/avg-students",
+                HttpMethod.GET, null, Double.class);
+
+        assertEquals(HttpStatus.OK,response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(expectedYear,response.getBody());
     }
 
     @Test
     void getAllStudentLetterShowTEst() {
-        String url = "http://localhost:" + port + "/student/find-all/g";
-        Character c = 'g';
-        ResponseEntity<List<Student>> response = restTemplate.exchange(url, GET, null, new ParameterizedTypeReference<List<Student>>() {
-        });
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-    }
+        Student student = getStudentTest1();
+        Student student2 = getStudentTest2();
+        Student student3 = getStudentTest3();
+        studentRepository.save(student);
+        studentRepository.save(student2);
+        studentRepository.save(student3);
+        String url = LOCALHOST + port + "/student/find-all/d";
 
+        ResponseEntity<List<Student>> response = testRestTemplate.exchange(url, GET, null,
+                new ParameterizedTypeReference<List<Student>>() {
+        });
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(student2.getName(), response.getBody().get(0).getName());
+        assertEquals(student2.getAge(), response.getBody().get(0).getAge());
+    }
 
     @Test
     void shouldIntegerResponseEntity() {
-        String url = "http://localhost:" + port + "/student/avg-year";
+        Student student = getStudentTest1();
+        Student student2 = getStudentTest2();
+        Student student3 = getStudentTest3();
+        studentRepository.save(student);
+        studentRepository.save(student2);
+        studentRepository.save(student3);
+        String url = LOCALHOST + port + "/student/avg-year";
 
-        ResponseEntity<Integer> response = restTemplate.getForEntity(url, Integer.class);
-
+        ResponseEntity<Integer> response = testRestTemplate.getForEntity(url, Integer.class);
 
         assertEquals(response.getStatusCode(), HttpStatus.OK);
-        assertEquals(studentController.integerResponseEntity().getBody(), restTemplate.getForObject(url, Integer.class));
+        assertEquals(18, testRestTemplate.getForObject(url, Integer.class));
+    }
+
+    private Student getStudentTest1() {
+        Student student = new Student();
+        student.setName("Test_name1");
+        student.setAge(22);
+        return student;
+    }
+
+    private Student getStudentTest2() {
+        Student student = new Student();
+        student.setName("DTest_name2");
+        student.setAge(11);
+        return student;
+    }
+
+    private Student getStudentTest3() {
+        Student student = new Student();
+        student.setName("Test_name3");
+        student.setAge(22);
+        return student;
     }
 
     private void deleteStudentTest(int id) {
         String url = "http://localhost:" + port + "/student/{id}";
 
-        ResponseEntity<Void> response = restTemplate.exchange(url, DELETE, null, Void.class, id);
+        ResponseEntity<Void> response = testRestTemplate.exchange(url, DELETE, null, Void.class, id);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
     }
 
@@ -104,7 +153,7 @@ public class StudentControllerTest {
         studentRequest.setAge(2);
         HttpEntity<Student> reqEntity = new HttpEntity<>(studentRequest);
 
-        ResponseEntity<Student> response = restTemplate.exchange(url, POST, reqEntity, Student.class);
+        ResponseEntity<Student> response = testRestTemplate.exchange(url, POST, reqEntity, Student.class);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         assertNotNull(response.getBody());
 

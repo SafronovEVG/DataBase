@@ -1,6 +1,7 @@
 package com.example.FacultetAndStudents.controller;
 
 import com.example.FacultetAndStudents.model.Faculty;
+import com.example.FacultetAndStudents.service.api.FacultyService;
 import com.example.FacultetAndStudents.service.impl.FacultyServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +12,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/faculty")
 public class FacultyController {
-    private final FacultyServiceImpl facultyService;
+    private final FacultyService facultyService;
 
     public FacultyController(FacultyServiceImpl facultyService) {
         this.facultyService = facultyService;

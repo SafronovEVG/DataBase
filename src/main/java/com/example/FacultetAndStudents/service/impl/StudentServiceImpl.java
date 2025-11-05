@@ -76,16 +76,19 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.findAll();
     }
 
+    @Override
     public Integer getCountStudent() {
         log.info("get count student");
         return studentRepository.getCountStudent();
     }
 
+    @Override
     public Double getAvgYear() {
         log.info("get middle age");
         return studentRepository.getAvgYear();
     }
 
+    @Override
     public List<Student> getLastStudent(Integer number) {
         log.info("get last student");
         return studentRepository.getLastStudent(number);
