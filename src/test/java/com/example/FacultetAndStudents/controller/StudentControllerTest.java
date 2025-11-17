@@ -1,6 +1,5 @@
 package com.example.FacultetAndStudents.controller;
 
-import com.example.FacultetAndStudents.exception.StudentBadRequestException;
 import com.example.FacultetAndStudents.it.AbstractIntegrationTest;
 import com.example.FacultetAndStudents.model.Student;
 import org.assertj.core.api.Assertions;
@@ -9,7 +8,6 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.HttpMethod.*;

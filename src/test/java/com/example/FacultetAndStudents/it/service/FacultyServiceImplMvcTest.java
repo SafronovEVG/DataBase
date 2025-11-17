@@ -34,19 +34,24 @@ public class FacultyServiceImplMvcTest {
     private Faculty facultyTest;
     private Faculty facultyTest2;
     private Faculty facultyTest3;
+    private Faculty getFacultyTestNull;
 
     @BeforeEach
     void setUp() {
         facultyTest = new Faculty();
         facultyTest2 = new Faculty();
         facultyTest3 = new Faculty();
+        getFacultyTestNull = new Faculty();
+
 
         facultyTest.setName("TestFaculty1");
         facultyTest2.setName("TestFaculty2");
         facultyTest3.setName("TestFaculty3");
+        getFacultyTestNull.setName(null);
         facultyTest.setColor("TestColorFaculty1");
         facultyTest2.setColor("TestColorFaculty2");
         facultyTest3.setColor("TestColorFaculty3");
+        getFacultyTestNull.setColor(null);
         facultyTest.setId(1);
         facultyTest2.setId(2);
         facultyTest3.setId(3);
@@ -117,7 +122,7 @@ public class FacultyServiceImplMvcTest {
 
     @Test
     void getLongFacultyName() {
-        List<Faculty> faculties = List.of(facultyTest);
+        List<Faculty> faculties = List.of(facultyTest,getFacultyTestNull);
         when(facultyRepository.findAll()).thenReturn((faculties));
 
         String longFacultyName = facultyService.getLongFacultyName();

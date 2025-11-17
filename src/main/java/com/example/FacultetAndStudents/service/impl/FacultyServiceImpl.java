@@ -83,6 +83,7 @@ public class FacultyServiceImpl implements FacultyService {
         log.info("Get long name faculty");
         return facultyRepository.findAll()
                 .stream().parallel()
+                .filter(faculty -> faculty.getName() != null)
                 .map(Faculty::getName).max(Comparator.comparing(String::length)).orElse(toString());
     }
 

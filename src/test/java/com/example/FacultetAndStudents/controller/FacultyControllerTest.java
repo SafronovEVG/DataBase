@@ -2,7 +2,6 @@ package com.example.FacultetAndStudents.controller;
 
 import com.example.FacultetAndStudents.it.AbstractIntegrationTest;
 import com.example.FacultetAndStudents.model.Faculty;
-import com.example.FacultetAndStudents.model.Student;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -11,10 +10,7 @@ import org.springframework.http.*;
 import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.HttpMethod.*;
 
@@ -63,8 +59,11 @@ public class FacultyControllerTest extends AbstractIntegrationTest {
         assertEquals(HttpStatusCode.valueOf(200), responseGet.getStatusCode());
         assertEquals(extendSize, responseGet.getBody().size());
         assertEquals(1, responseGet.getBody().stream().iterator().next().getId());
+        assertEquals(2,responseGet.getBody().stream().skip(1).findFirst().get().getId());
         assertEquals(faculty1.getName(), responseGet.getBody().stream().iterator().next().getName());
+        assertEquals(faculty2.getName(), responseGet.getBody().stream().skip(1).findFirst().get().getName());
         assertEquals(faculty1.getColor(), responseGet.getBody().stream().iterator().next().getColor());
+        assertEquals(faculty2.getColor(), responseGet.getBody().stream().skip(1).findFirst().get().getColor());
     }
 
     @Test
@@ -159,41 +158,3 @@ public class FacultyControllerTest extends AbstractIntegrationTest {
         return headers;
     }
 }
-//
-//    @Test
-//    void createAndDeleteFaculty() {
-//        Faculty facultyRequest = createFaculty();
-//        deleteFaculty(createFaculty().getId());
-//    }
-//
-//
-//
-//    @Test
-//    void shouldGetStudentOnFacultyTest() {
-//        String url = "http://localhost:" + port + "/faculty/students/1";
-//
-//        assertThat(this.testRestTemplate.getForObject(url, Faculty.class)).isNotNull();
-//        ResponseEntity<Optional<Faculty>> response = testRestTemplate.exchange(url, HttpMethod.GET, null,
-//                new ParameterizedTypeReference<Optional<Faculty>>() {
-//                });
-//        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-//        assertEquals(facultyController.getStudentsOnFaculty(1).toString(), response.getBody().toString());
-//    }
-//
-//    @Test
-//    void shouldGetLongNameFaculty() {
-//        String url = "http://localhost:" + port + "/faculty/long-name-faculty";
-//        ResponseEntity<String> response = testRestTemplate.exchange(url, GET, null, String.class);
-//
-//        assertThat(this.testRestTemplate.getForEntity(url, String.class)).isNotNull();
-//        assertEquals(response.getStatusCode(), HttpStatus.OK);
-//        assertEquals(facultyController.getLongNameFaculty().getBody(), response.getBody());
-//    }
-//
-//    @Test
-//    void shouldGetIntTest() {
-//        String url = "http://localhost:" + port + "/faculty/get-int";
-//
-//        ResponseEntity<Integer> response = testRestTemplate.exchange(url, GET, null, Integer.class);
-//        assertEquals(response.getStatusCode(),HttpStatus.OK);
-//    }
