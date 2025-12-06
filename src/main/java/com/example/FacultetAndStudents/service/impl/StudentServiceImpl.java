@@ -119,4 +119,49 @@ public class StudentServiceImpl implements StudentService {
                 .summaryStatistics()
                 .getAverage();
     }
+
+    @Override
+    public void returnStudentInConsole() {
+        log.info("return students in console is starting");
+        List<Student> students = studentRepository.findAll();
+
+        System.out.println(students.get(0));
+        System.out.println(students.get(1));
+
+        new Thread(() -> {
+            System.out.println(students.get(2));
+            System.out.println(students.get(3));
+        }).start();
+
+        new Thread(() -> {
+            System.out.println(students.get(4));
+            System.out.println(students.get(5));
+        }).start();
+
+    }
+    public void returnSynchronizedStudentInConsole() {
+        log.info("return synchronized students in console is starting");
+        List<Student> students = studentRepository.findAll();
+
+        synchronized (students) {
+            System.out.println(students.get(0));
+            System.out.println(students.get(1));
+        }
+
+        new Thread(() -> {
+            synchronized (students) {
+                System.out.println(students.get(2));
+                System.out.println(students.get(3));
+            }
+        }).start();
+
+        new Thread(() -> {
+            synchronized (students) {
+                System.out.println(students.get(4));
+                System.out.println(students.get(5));
+            }
+        }).start();
+
+    }
+
 }

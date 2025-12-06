@@ -83,5 +83,15 @@ public class StudentController {
     ResponseEntity<Integer> integerResponseEntity() {
         return ResponseEntity.ok(studentService.getAvgYearForStream());
     }
+
+    @GetMapping("/print-parallel")
+    public void returnConsole() {
+        studentService.returnStudentInConsole();
+    }
+
+    @GetMapping("/print-synchronized")
+    public void printConsoleSynchronized() {
+        studentService.returnSynchronizedStudentInConsole();
+    }
 }
 

@@ -35,4 +35,6 @@ public interface StudentService {
     List<Student> getAllStudentsLetter(Character character);
 
     Integer getAvgYearForStream();
+
+    void returnStudentInConsole();
 }
